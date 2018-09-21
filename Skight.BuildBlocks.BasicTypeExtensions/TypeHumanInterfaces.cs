@@ -27,6 +27,10 @@ namespace Skight.BuildBlocks.BasicTypeExtensions
             }
             return !(type == base_type) && base_type.IsAssignableFrom(type);
         }
-        
+
+        public static bool is_assignable_to(this Type type, Type base_type)
+        {
+            return base_type.IsAssignableFrom(type);
+        }
     }
 }
