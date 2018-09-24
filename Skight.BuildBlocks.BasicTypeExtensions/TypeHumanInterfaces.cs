@@ -19,10 +19,10 @@ namespace Skight.BuildBlocks.BasicTypeExtensions
             return false;
         }
 
-        public static bool has_cycle_depends(this Type type, Type base_type)
+        public static bool has_cycle_depends(this Type type, Type inherited_type)
         {
-            ParameterInfo[] param_infos = base_type.greediest_constructor().GetParameters();
-            if (param_infos.Any(x => x.ParameterType == type)) return true;
+            ParameterInfo[] param_infos = type.greediest_constructor().GetParameters();
+            if (param_infos.Any(x => x.ParameterType == inherited_type)) return true;
             return false;
         }
 
