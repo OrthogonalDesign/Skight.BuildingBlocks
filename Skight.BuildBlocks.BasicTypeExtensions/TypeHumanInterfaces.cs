@@ -13,20 +13,25 @@ namespace Skight.BuildBlocks.BasicTypeExtensions
                 .First();
         }
 
-        public static bool has_cycle_depends(this Type type, ParameterInfo[] base_types)
+        public static bool has_cycle_depends(this Type type, ParameterInfo[] related_params)
         {
-            if (base_types.Any(x => x.ParameterType.has_cycle_depends(type))) return true;
+            foreach (var parameter in related_params)
+            {
+                Type param_type = parameter.ParameterType;
+                if (param_type.is_recursive_depend(type)) return true;
+            }
             return false;
         }
 
-        public static bool has_cycle_depends(this Type type, Type inherited_type)
+        public static bool is_recursive_depend(this Type type, Type super_type)
         {
             ParameterInfo[] param_infos = type.greediest_constructor().GetParameters();
-            if (param_infos.Any(x => x.ParameterType == inherited_type)) return true;
+            if (param_infos.Any(x => x.ParameterType == super_type)) return true;
+            if (super_type.has_cycle_depends(param_infos)) return true;
             return false;
         }
 
-        public static bool is_inherited_from(this Type type, Type base_type )
+        public static bool is_inherited_from(this Type type, Type base_type)
         {
             if (base_type.IsGenericTypeDefinition)
             {
