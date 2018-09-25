@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -13,21 +14,22 @@ namespace Skight.BuildBlocks.BasicTypeExtensions
                 .First();
         }
 
-        public static bool has_cycle_depends(this Type type, ParameterInfo[] related_params)
+        public static bool has_cycle_depends(this Type type)
         {
-            foreach (var parameter in related_params)
-            {
-                Type param_type = parameter.ParameterType;
-                if (param_type.is_recursive_depend(type)) return true;
-            }
-            return false;
+            List<Type> depends = new List<Type>() { type };
+            return type.is_depend(depends);
         }
 
-        public static bool is_recursive_depend(this Type type, Type super_type)
+        private static bool is_depend(this Type type, List<Type> depends_types)
         {
-            ParameterInfo[] param_infos = type.greediest_constructor().GetParameters();
-            if (param_infos.Any(x => x.ParameterType == super_type)) return true;
-            if (super_type.has_cycle_depends(param_infos)) return true;
+            var param_types = type.greediest_constructor().GetParameters().Select(x => x.ParameterType);
+            foreach (var param_type in param_types)
+            {
+                if (depends_types.Contains(param_type)) return true;
+                depends_types.Add(param_type);
+
+                if (param_type.is_depend(depends_types)) return true;
+            }
             return false;
         }
 
