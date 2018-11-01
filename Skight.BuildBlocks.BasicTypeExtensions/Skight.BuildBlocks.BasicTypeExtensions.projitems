@@ -9,6 +9,7 @@
     <Import_RootNamespace>Skight.BuildBlocks.BasicTypeExtensions</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)EnumerableHumanInterfaces.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeHumanInterfaces.cs" />
   </ItemGroup>
 </Project>
